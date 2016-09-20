@@ -1,5 +1,5 @@
 { "name": "compactjson",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JSON.stringify(data) with fewer mostly-blank lines.",
   "keywords": [ "compact", "JSON" ],
 

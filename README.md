@@ -27,7 +27,7 @@ data = { '_': 'hello',
   opts: compactjson.defaultOpts,
   tasks: [ 'wash cat', 'eat some vegetables', 'sort arrays (not)' ],
   dex: { kadabra: 64, abra: 63, hocus: null },
-  types: { num: -123.45, bool: false, Obj: {} }
+  types: { num: -123.45, bool: false, Obj: {}, arr: [] }
   };
 jsonStr = compactjson(data, { width: 71 });
 
@@ -40,7 +40,7 @@ Result:
 
 <!--#include file="usage.js" start="  //--" stop="};" code="json"
   cut-head="//= `" cut-tail="`" -->
-<!--#verbatim lncnt="9" -->
+<!--#verbatim lncnt="10" -->
 ```json
 { "_": "hello", "dex": { "abra": 63, "hocus": null, "kadabra": 64 },
   "opts": { "forceBreakAfterContainer": true, "indent": 2,
@@ -48,20 +48,18 @@ Result:
     "width": 79 },
   "tasks": [ "wash cat", "eat some vegetables", "sort arrays (not)" ],
   "types": { "Obj": {},
+    "arr": [],
     "bool": false, "num": -123.45 } }
 ```
 <!--/include-->
 
+CLI:
+
 ```bash
-$ compactjson foo
-bar
+$ compactjson package.json | grep main
+  "license": "ISC", "main": "cj.js", "name": "compactjson",
 ```
 
-```javascript
-var compactjson = require('compactjson');
-D.result  = compactjson(null);
-D.expect('===',           null);
-```
 
 
 <!--#toc stop="scan" -->
