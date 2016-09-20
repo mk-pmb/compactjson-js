@@ -1,0 +1,24 @@
+{ "name": "compactjson",
+  "version": "0.1.0",
+  "description": "JSON.stringify(data) with fewer mostly-blank lines.",
+  "keywords": [ "compact", "JSON" ],
+
+  "author": "M.K. (https://github.com/mk-pmb)",
+  "homepage": "https://github.com/mk-pmb/compactjson-js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-pmb/compactjson-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mk-pmb/compactjson-js/issues"
+  },
+
+  "private": false, "license": "ISC",
+
+  "main": "cj.js",
+  "bin": { "compactjson": "cli.js" },
+  "scripts": { "test": "bash test/test-all.sh" },
+  "directories": { "test": "test" },
+
+  "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
+}
