@@ -1,0 +1,61 @@
+﻿[["Hint: test file format is explained in:", "width.json", false
+],
+
+[ "indent: false",
+  "\n For tab tests, see indent.tabs.json",
+  { "maxItemsPerLine": 1, "indent": false },
+  [1,[2,3],4]
+],
+
+[ "indent: (num) 0", { "maxItemsPerLine": 1, "indent": 0 },
+  [1,[2,3],4]
+],
+
+[ "indent: (spc) 0", { "maxItemsPerLine": 1, "indent": "" },
+  [1,[2,3],4]
+],
+
+[ "indent: (num) 1", { "maxItemsPerLine": 1, "indent": 1 },
+  [ 1,
+   [ 2,
+    3 ],
+   4 ]
+],
+
+[ "indent: (spc) 1", { "maxItemsPerLine": 1, "indent": " " },
+  [ 1,
+   [ 2,
+    3 ],
+   4 ]
+],
+
+[ "indent: (num) 2", { "maxItemsPerLine": 1, "indent": 2 },
+  [ 1,
+    [ 2,
+      3 ],
+    4 ]
+],
+
+[ "indent: (spc) 2",
+  { "maxItemsPerLine": 1, "indent": "  " },
+  [ 1,
+    [ 2,
+      3 ],
+    4 ]
+],
+
+[ "indent: (num) 11", { "maxItemsPerLine": 1, "indent": 11 },
+  [ 1,
+             [ 2,
+                        3 ],
+             4 ]
+],
+
+[ "indent: (spc) 11", { "maxItemsPerLine": 1, "indent": "           " },
+  [ 1,
+             [ 2,
+                        3 ],
+             4 ]
+],
+
+null ]

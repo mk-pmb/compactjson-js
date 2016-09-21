@@ -1,0 +1,35 @@
+﻿[
+
+[ "test file",
+  " format",
+  "\n The test name can be continued as needed. You can use a newline (\n)",
+  "   to terminate the test name and start annotations/explanations",
+  "   in even more strings.",
+
+  "Next up: An object giving the options to be used",
+  "(or 'false' to (temporatily) ignore this test),",
+  "followed by the JSON that you expect to be generated.",
+  "Finally, the JSON that you expect to be generated.",
+  "but indented with one tab or two additional spaces in front of each line.",
+  "The boundary between options and expectation is RegExp-matched",
+  "by /\\},\n( {2}|\t)(\\S)/, with \\S being the first expected character.",
+  {},
+  [ "the expectation", "is terminated by", "\n]" ]
+],
+
+[ "width: 20",
+  { "width": 20, "maxItemsPerLine": 9999 },
+  [ "barely fits", 12,
+    "this won't:",
+    123,
+    "no comma after this item" ]
+],
+
+
+
+
+
+
+
+
+null ]

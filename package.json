@@ -17,8 +17,13 @@
 
   "main": "cj.js",
   "bin": { "compactjson": "cli.js" },
-  "scripts": { "test": "bash test/test-all.sh" },
+  "scripts": { "test": "nodejs test/test.js" },
   "directories": { "test": "test" },
+
+  "devDependencies": {
+    "async": "^2.0.1",
+    "generic-diff": "^1.0.1"
+  },
 
   "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
 }

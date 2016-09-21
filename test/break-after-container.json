@@ -1,0 +1,28 @@
+﻿[["Hint: test file format is explained in:", "width.json", false
+],
+
+[ "breakAfterContainer: false",
+  { "width": 9999, "maxItemsPerLine": 9999,
+    "breakAfterContainer": false },
+  [ 1, [], 2, {}, 3, [ 0 ], 4, { "": 0 }, 5, 6 ]
+],
+
+[ "breakAfterContainer: true",
+  { "width": 9999, "maxItemsPerLine": 9999,
+    "breakAfterContainer": true },
+  [ 1, [],
+    2, {},
+    3, [ 0 ],
+    4, { "": 0 },
+    5, 6 ]
+],
+
+[ "breakAfterContainer: 'unless-empty'",
+  { "width": 9999, "maxItemsPerLine": 9999,
+    "breakAfterContainer": "unless-empty" },
+  [ 1, [], 2, {}, 3, [ 0 ],
+    4, { "": 0 },
+    5, 6 ]
+],
+
+null ]

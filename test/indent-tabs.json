@@ -1,0 +1,18 @@
+﻿[["Hint: test file format is explained in:", "width.json", false
+],
+
+[ "indent: (tab) 1", { "maxItemsPerLine": 1, "indent": "\t" },
+	[ 1,
+		[ 2,
+			3 ],
+		4 ]
+],
+
+[ "indent: (tab) 3", { "maxItemsPerLine": 1, "indent": "\t\t\t" },
+	[ 1,
+				[ 2,
+							3 ],
+				4 ]
+],
+
+null ]
