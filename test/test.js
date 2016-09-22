@@ -17,12 +17,14 @@ function bindMthd(ctx, mthd, args) {
 
 
 EX.runFromCLI = function () {
-  async.waterfall([
-    EX.verifyUsageDemo,
+  var tests = process.argv.slice(2);
+  tests = (tests.length ? tests.map(EX.jsonFileTest) : [
     bindMthd(fs, 'readdir', testDirPathPrefix),
     EX.findJsonTests,
     async.parallel,
-  ], function (err) {
+    EX.verifyUsageDemo,
+  ]);
+  async.waterfall(tests, function (err) {
     if (err) {
       console.error('-ERR ' + String(err.message || err));
       return process.exit(4);
@@ -66,9 +68,14 @@ EX.textEq = function (actual, expect, testName, next) {
 
 EX.findJsonTests = function (dirItems, next) {
   var tests = dirItems.filter(bindMthd(/\.json$/, 'exec')).map(function (fn) {
-    return EX.withFileText(testDirPathPrefix + fn, EX.optionsTestJson, [fn]);
+    return EX.jsonFileTest(fn, testDirPathPrefix + fn);
   });
   next(null, tests);
+};
+
+
+EX.jsonFileTest = function (fn, absFn) {
+  return EX.withFileText(absFn || fn, EX.optionsTestJson, [fn]);
 };
 
 
