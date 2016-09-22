@@ -6,7 +6,6 @@
 module.exports = (function () {
   var EX, ignVar = Boolean;
 
-
   EX = function compactJSONify(x, opt) {
     if (!opt) { opt = false; }
     opt = Object.assign({}, EX.defaultOpts, opt);
@@ -15,7 +14,7 @@ module.exports = (function () {
     if ((typeof opt.indent) === 'number') {
       opt.indent = EX.spaces(opt.indent);
     }
-    x = EX.jsonify(x, opt, '', opt.width);
+    x = EX.jsonify(x, opt, opt.width).join('\n');
     return x;
   };
 
@@ -40,34 +39,43 @@ module.exports = (function () {
   };
 
 
-  EX.jsonify = function (x, opt, curIndent, width) {
+  EX.jsonify = function (x, opt, width, finalAppendage) {
     if (x === undefined) { return 'null'; }
     if ((x && typeof x) !== 'object') {
-      return JSON.stringify(x, opt.serializer, opt.indent);
+      return [JSON.stringify(x, opt.serializer, opt.indent
+        ) + (finalAppendage || '')];
     }
-    var buf = { jsonLines: '', curLn: '', itemsInLine: 0,
-      curIndent: curIndent,
-      subIndent: curIndent + opt.indent,
+    var buf = { jsonLines: [], curLn: '', itemsInLine: 0,
       curWidth: width,
       subWidth: width - opt.indent.length
       };
     buf.items = EX.containerToLines(x, buf, opt);
     buf.curLn = buf.items.brak[0];
-    buf.items.forEach(EX.appendItem.bind(null, buf, opt));
-    EX.appendEndBrak(buf.items.brak[1], buf, opt);
+    if (buf.items.length === 0) { return [buf.items.brak + finalAppendage]; }
+    buf.end = buf.items.brak[1] + (finalAppendage || '');
+    buf.items.forEach(EX.appendItem.bind(null, buf, opt, ' '));
+    //EX.appendItem(buf, opt, (buf.items.length && ' '), buf.end);
     EX.finishLine(buf, opt);
+    buf.jsonLines.push(buf.end);
+    console.dir({ jsonified: buf.jsonLines });
     return buf.jsonLines;
   };
 
 
-  EX.appendItem = function (buf, opt, item) {
-    var fits = EX.checkItemFit(buf, opt, item);
-    // if (opt.debugFit) {
-    //   console.error(['fit?', (buf.curLn.length + item.length),
-    //     buf.curWidth, (fits ? '+' : '¶')], buf.curLn, item);
-    // }
+  EX.appendItem = function (buf, opt, preSep, item) {
+    if (!item) { return; }
+    if ((typeof item) !== 'string') {
+      throw new Error('can only append strings, not ' + JSON.stringify(item));
+    }
+    if (!preSep) { preSep = ''; }
+    var fits = EX.checkItemFit(buf, opt, preSep, item);
+    //* <-- to un-comment .debugFit, add another slash in front.
+    if (opt.debugFit) {
+      console.error({ fit: [ (buf.curLn.length + item.length),
+        buf.curWidth, (fits ? ', ' : ' ¶')], cur: buf.curLn, add: item });
+    } // */
     if (fits) {
-      buf.curLn += ' ' + item;
+      buf.curLn += preSep + item;
       buf.itemsInLine += 1;
     } else {
       EX.finishLine(buf, opt, item);
@@ -82,23 +90,31 @@ module.exports = (function () {
   };
 
 
-  EX.checkItemFit = function (buf, opt, item) {
+  EX.prevItemWasContainer = function (buf) {
+    return EX.charWhich(buf.curLn, ']}', -2);
+  };                //  buf.curLn       [-1] = ','
+
+
+  EX.checkItemFit = function (buf, opt, preSep, item) {
     if (buf.itemsInLine === 0) { return true; }
-    if (buf.itemsInLine >= opt.maxItemsPerLine) { return false; }
-    if (opt.breakAfterBroken && (item.indexOf('\n')) !== -1) { return false; }
-    var lengthEstimate = buf.curLn.length + 1 + item.length;
+    var lengthEstimate, isValue = !EX.charWhich(item, ']}', 0);
+
+    if (isValue) {
+      if (buf.itemsInLine >= opt.maxItemsPerLine) { return false; }
+      if (opt.breakAfterBroken && (item.indexOf('\n')) !== -1) { return false; }
+    }
+
+    lengthEstimate = buf.curLn.length + preSep.length + item.length;
     if (lengthEstimate > buf.curWidth) { return false; }
 
-    switch (opt.breakAfterContainer) {
-    case true:
-      // buf.curLn[-1] = ','
-      if (EX.charWhich(buf.curLn, ']}', -2)) { return false; }
-      break;
-    case 'unless-empty':
-      if (EX.charWhich(buf.curLn, ']}', -2)) {
+    if (isValue && EX.prevItemWasContainer(buf)) {
+      switch (opt.breakAfterContainer) {
+      case true:
+        return false;
+      case 'unless-empty':
         if (!EX.charWhich(buf.curLn, '{[', -3)) { return false; }
+        break;
       }
-      break;
     }
 
     return true;
@@ -107,22 +123,12 @@ module.exports = (function () {
 
   EX.finishLine = function (buf, opt, startNext) {
     ignVar(opt);
-    if (buf.curLn) {
-      if (buf.jsonLines) { buf.jsonLines += '\n'; }
-      buf.jsonLines += buf.curLn;
-    }
-    buf.curLn = (startNext ? buf.subIndent + startNext : '');
-    buf.itemsInLine = (startNext ? 1 : 0);
-  };
-
-
-  EX.appendEndBrak = function (brak, buf, opt) {
-    EX.finishLine(buf, opt);
-    var spBrak = (buf.items.length > 0 ? ' ' : '') + brak;
-    if ((buf.curLn.length + spBrak.length) <= buf.curWidth) {
-      buf.jsonLines += spBrak;
-    } else {
-      buf.jsonLines += '\n' + buf.curIndent + brak;
+    if (buf.curLn) { buf.jsonLines.push(buf.curLn); }
+    buf.curLn = '';
+    buf.itemsInLine = 0;
+    if (startNext) {
+      buf.curLn = opt.indent + startNext;
+      buf.itemsInLine += 1;
     }
   };
 
@@ -133,8 +139,13 @@ module.exports = (function () {
       key = JSON.stringify(val, opt.serializer, 0) + ': ';
       val = obj[val];
     }
-    val = key + EX.jsonify(val, opt, buf.subIndent, buf.subWidth);
-    if (idx < lastIdx) { val += ','; }
+    val = EX.jsonify(val, opt, buf.subWidth,
+      (idx < lastIdx ? ',' : ''));
+    console.dir({ keyLineVal: val });
+    if (key) {
+      val[0] = key + val[0];
+      console.dir({ keyLine: val });
+    }
     return val;
   };
 
@@ -145,7 +156,8 @@ module.exports = (function () {
     if (keys && opt.sortKeys) {
       keys = (opt.sortKeys === true ? keys.sort() : keys.sort(opt.sortKeys));
     }
-    x = (keys || x).map(EX.keyLine.bind(null, (keys && x), buf, opt, lastIdx));
+    x = (keys || x).map(EX.keyLine.bind(null, (keys && x),
+      buf, opt, lastIdx));
     x.brak = (keys ? '{}' : '[]');
     return x;
   };

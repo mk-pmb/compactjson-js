@@ -14,10 +14,10 @@ to remind you that it produces a -dash- bullet list, not JSON.
 
 Usage
 -----
-from [usage.js](usage.js):
+from [test/usage.js](test/usage.js):
 
-<!--#include file="usage.js" start="  //#u" stop="  //#r" code="javascript"
-  outdent="  " -->
+<!--#include file="test/usage.js" start="  //#u" stop="  //#r"
+  outdent="  " code="javascript" -->
 <!--#verbatim lncnt="11" -->
 ```javascript
 var compactjson = require('compactjson'),

@@ -8,8 +8,8 @@ module.exports = function usageDemo(require, console) {
     data = { opts: compactjson.defaultOpts, '!': 1,
       tasks: [ 'wash cat', 'eat some vegetables', 'sort arrays (not)' ],
       dex: { kadabra: 64, abra: 63 },
-      types: { num: -123.45, bool: false, Obj: {}, arr: [] },
-      q1: [], q2: [], q3: [ true, true ], q4: [], q5: [],
+      types: { num: -123.45, bool: false, Obj: {}, },
+      q1: [], q2: [], q3: [ true, true ], q4: [], q5: [[[[[]]]]]
       },
     jsonStr = compactjson(data, { width: 64 });
   console.log(jsonStr);
@@ -20,9 +20,9 @@ module.exports = function usageDemo(require, console) {
   //= `    "maxItemsPerLine": 4, "serializer": null,`
   //= `    "sortKeys": true, "width": 79 },`
   //= `  "q1": [], "q2": [], "q3": [ true, true ],`
-  //= `  "q4": [], "q5": [],`
+  //= `  "q4": [], "q5": [ [ [ [ [] ] ] ] ],`
   //= `  "tasks": [ "wash cat", "eat some vegetables", "sort arrays (not)" ],`
-  //= `  "types": { "Obj": {}, "arr": [], "bool": false, "num": -123.45 } }`
+  //= `  "types": { "Obj": {}, "bool": false, "num": -123.45 } }`
   //#e
   usageDemo.data = data;
   usageDemo.json = jsonStr;

@@ -1,4 +1,23 @@
-﻿[["Hint: test file format is explained in:", "width.json", false
+﻿[["Hint: test file format is explained in:", "0_file_format.json", false
+],
+
+[ "breakAfterBroken: dummy",
+  { "width": 20, "maxItemsPerLine": 1, "breakAfterContainer": false,
+    "breakAfterBroken": false, "debugFit": true
+  },
+  [ 1, 2 ]
+],
+
+[ "breakAfterBroken: false 1",
+  { "width": 20, "maxItemsPerLine": 9999, "breakAfterContainer": false,
+    "breakAfterBroken": true,
+  },
+  [ 123456789.0123456,
+    [ [ 1234567890,
+        12345 ]
+      ],
+    1,
+    123456789.012345 ]
 ],
 
 null ]
