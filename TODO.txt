@@ -1,0 +1,20 @@
+﻿
+* checkout zurück zur funzenden Version mit finalAppendage,
+  dann baue kürzer(rück)sichtige Optionen.
+* Echolot: Dive into data structures to measure their depths.
+  am besten [fortsetzbar nach n probes] auslegen.
+
+* json tester: konfigurables Präfix für _seine_ Optionen (z.B.
+  lineLen), die er dann von den opt popt.
+
+* emptyDepth: 0 | 1 für [] und {}
+
+* xml demo: ersatz-cj mit .replace(,\n {8}", ', "')
+
+* cj: opt.undef = null | undefined | other, und wenn undef: key nicht aufnehmen!
+
+* authentischer wäre zu tokenizen wg. serializer,
+  aber objdepth tree auch cool. mehr optionen für den durchschleifen?
+
+
+

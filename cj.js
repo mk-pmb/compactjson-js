@@ -4,17 +4,22 @@
 
 
 module.exports = (function () {
-  var EX, ignVar = Boolean;
+  var EX, ignVar = Boolean, objDepthFinder = require('objdepth');
 
   EX = function compactJSONify(x, opt) {
     if (!opt) { opt = false; }
     opt = Object.assign({}, EX.defaultOpts, opt);
     opt.width = (+opt.width || 0);
-    if (!opt.indent) { return JSON.stringify(x, opt.serializer, 0); }
     if ((typeof opt.indent) === 'number') {
-      opt.indent = EX.spaces(opt.indent);
+      opt.indent = ((opt.indent >= 1) && EX.spaces(opt.indent));
     }
-    x = EX.jsonify(x, opt, opt.width).join('\n');
+    if (!opt.indent) { return JSON.stringify(x, opt.serializer, 0); }
+    if (EX.empty(opt.indentFirst)) {
+      opt.indentFirst = opt.indent.slice(1);
+    }
+    x = objDepthFinder(x, { metaPath: true,
+      sortKeys: opt.sortKeys });
+    x = EX.jsonify(x, opt, opt.width);
     return x;
   };
 
@@ -30,6 +35,12 @@ module.exports = (function () {
   };
 
 
+  EX.empty = function (x, d) {
+    var e = ((x === null) || (x === undefined));
+    return (d === undefined ? e : (e ? d : x));
+  };
+
+
   EX.spaces = function (n) {
     n = (+n || 0);
     if (n < 1) { return ''; }
@@ -39,19 +50,21 @@ module.exports = (function () {
   };
 
 
-  EX.jsonify = function (x, opt, width, finalAppendage) {
-    if (x === undefined) { return 'null'; }
-    if ((x && typeof x) !== 'object') {
-      return [JSON.stringify(x, opt.serializer, opt.indent
-        ) + (finalAppendage || '')];
+  EX.jsonify = function (branch, opt, width, finalAppendage) {
+    var nodeValue = branch.data(), buf;
+    finalAppendage = (finalAppendage || '');
+    if (branch.type !== 'object') {
+      if (nodeValue === undefined) { nodeValue = null; }
+      return (JSON.stringify(nodeValue, opt.serializer, opt.indent
+        ) + finalAppendage);
     }
-    var buf = { jsonLines: [], curLn: '', itemsInLine: 0,
+    buf = { jsonLines: [], curLn: '', itemsInLine: 0,
       curWidth: width,
       subWidth: width - opt.indent.length
       };
     buf.items = EX.containerToLines(x, buf, opt);
     buf.curLn = buf.items.brak[0];
-    if (buf.items.length === 0) { return [buf.items.brak + finalAppendage]; }
+    if (buf.items.length === 0) { return [buf.items.brak]; }
     buf.end = buf.items.brak[1] + (finalAppendage || '');
     buf.items.forEach(EX.appendItem.bind(null, buf, opt, ' '));
     //EX.appendItem(buf, opt, (buf.items.length && ' '), buf.end);
