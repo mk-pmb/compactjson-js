@@ -16,12 +16,18 @@ function bindMthd(ctx, mthd, args) {
 }
 
 
+function asyncVoidFirstArgIfArray(arg1, next) {
+  (Array.isArray(arg1) ? next : arg1)();
+}
+
+
 EX.runFromCLI = function () {
   var tests = process.argv.slice(2);
   tests = (tests.length ? tests.map(EX.jsonFileTest) : [
     bindMthd(fs, 'readdir', testDirPathPrefix),
     EX.findJsonTests,
     async.parallel,
+    asyncVoidFirstArgIfArray,
     EX.verifyUsageDemo,
   ]);
   async.waterfall(tests, function (err) {

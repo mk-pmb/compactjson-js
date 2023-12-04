@@ -1,5 +1,5 @@
 { "name": "compactjson",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "JSON.stringify(data) with fewer mostly-blank lines.",
   "keywords": [ "compact", "JSON" ],
 
@@ -21,7 +21,7 @@
   "directories": { "test": "test" },
 
   "devDependencies": {
-    "async": "^2.0.1",
+    "async": "^3.2.5",
     "generic-diff": "^1.0.1"
   },
 
