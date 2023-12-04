@@ -7,9 +7,8 @@
   "   in even more strings.",
 
   "Next up: An object giving the options to be used",
-  "(or 'false' to (temporatily) ignore this test),",
-  "followed by the JSON that you expect to be generated.",
-  "Finally, the JSON that you expect to be generated.",
+  "(or 'false' to (temporatily) ignore this test).",
+  "Finally, the JSON that you expect to be generated,",
   "but indented with one tab or two additional spaces in front of each line.",
   "The boundary between options and expectation is RegExp-matched",
   "by /\\},\n( {2}|\t)(\\S)/, with \\S being the first expected character.",
